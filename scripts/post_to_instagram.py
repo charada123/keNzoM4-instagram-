@@ -59,7 +59,7 @@ def _create_media_container(image_url: str, caption: str, ig_user_id: str, token
         data={"image_url": image_url, "caption": caption, "access_token": token},
         timeout=60,
     )
-    resp.raise_for_status()
+    _raise_with_body(resp)
     return resp.json()["id"]
 
 
@@ -88,8 +88,15 @@ def _publish(creation_id: str, ig_user_id: str, token: str) -> str:
         data={"creation_id": creation_id, "access_token": token},
         timeout=60,
     )
-    resp.raise_for_status()
+    _raise_with_body(resp)
     return resp.json()["id"]
+
+
+def _raise_with_body(resp: requests.Response) -> None:
+    if resp.ok:
+        return
+    print(f"Instagram API error {resp.status_code}: {resp.text}", file=sys.stderr)
+    resp.raise_for_status()
 
 
 if __name__ == "__main__":
