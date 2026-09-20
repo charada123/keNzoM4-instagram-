@@ -2,9 +2,15 @@
   {
     "id": "0001",
     "image": "0001.jpg",
-    "caption": "Testing the bot 🤖",
+    "caption": "Testing the bot \ud83e\udd16",
     "posted": true,
     "posted_at": "2026-09-20T22:00:00Z",
     "note": "confirmed live on Instagram; media_id not captured due to a workflow push race"
+  },
+  {
+    "id": "0002",
+    "image": "0002.jpg",
+    "caption": "Stance on point. \ud83d\udda4 G82 M4 wearing carbon up front and a little attitude in the headlights.\n\n#BMW #BMWM4 #M4Competition #G82M4 #BMWMotorsport #Bimmer #BimmerLife #CarbonFiber #StanceNation #BMWgram #CarsOfInstagram #GermanEngineering #MPower #BMWM",
+    "posted": false
   }
 ]
