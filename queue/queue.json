@@ -3,6 +3,8 @@
     "id": "0001",
     "image": "0001.jpg",
     "caption": "Testing the bot 🤖",
-    "posted": false
+    "posted": true,
+    "posted_at": "2026-09-20T22:00:00Z",
+    "note": "confirmed live on Instagram; media_id not captured due to a workflow push race"
   }
 ]
