@@ -17,48 +17,37 @@ oldest un-posted one to Instagram once a day.
 
 ## One-time setup (required before anything can post)
 
-You need a Meta (Facebook) Developer app connected to an Instagram
-**Professional** (Business or Creator) account. None of this can be done by
-Claude on your behalf — it requires your own Meta login.
+This uses Meta's **Instagram API with Instagram Login** (not the older
+Facebook-Page-based Graph API), set up via a Meta Developer app. The posting
+script calls `graph.instagram.com` and expects a token in the `IGAA...`
+format that this flow issues.
 
-1. **Make sure the Instagram account is a Professional account** and is
-   linked to a Facebook Page you manage (Instagram app → Settings →
-   Account type and tools → Switch to professional account, then link/create
-   a Facebook Page from the same flow if it asks).
-2. **Create a Meta app**: go to https://developers.facebook.com/apps →
-   Create App → type "Business". Add the **Instagram Graph API** product to it.
-3. **Generate a User access token** with these scopes, using the
-   [Graph API Explorer](https://developers.facebook.com/tools/explorer/):
-   `instagram_basic`, `instagram_content_publish`, `pages_show_list`,
-   `pages_read_engagement`, `business_management`.
-   - While the app is in Development mode, this works as long as your own
-     Meta account is added as an Admin/Developer/Tester on the app — no App
-     Review needed for posting to your own account.
-4. **Exchange it for a long-lived token** (~60 days):
-   ```
-   GET https://graph.facebook.com/v21.0/oauth/access_token
-     ?grant_type=fb_exchange_token
-     &client_id=<APP_ID>
-     &client_secret=<APP_SECRET>
-     &fb_exchange_token=<SHORT_LIVED_TOKEN>
-   ```
-5. **Find your Instagram Business Account ID**:
-   ```
-   GET https://graph.facebook.com/v21.0/me/accounts?access_token=<TOKEN>
-   ```
-   take the Page ID from the result, then:
-   ```
-   GET https://graph.facebook.com/v21.0/<PAGE_ID>?fields=instagram_business_account&access_token=<TOKEN>
-   ```
-   the `id` in the response is your `IG_USER_ID`.
-6. **Add two repo secrets** (Settings → Secrets and variables → Actions →
+1. Instagram account must be a **Professional** account (Instagram app →
+   Settings → Account type and tools).
+2. Create a Meta app at https://developers.facebook.com/apps → **Create App**
+   → type **Business** → add use case **"Manage messaging & content on
+   Instagram"**.
+3. On the app dashboard → **App roles → Roles**, add your own Facebook
+   profile with the **Instagram Tester** role. Then, on your phone: Instagram
+   app → Settings and privacy → Apps and websites → **Tester Invites** tab →
+   confirm the invite is accepted (shows "Authorized by you").
+4. Back on the app dashboard → **Use cases → Customize → API setup with
+   Instagram login** → step 1, add the `instagram_business_content_publish`
+   permission (under "Permissions and features") in addition to the
+   defaults. → step 2, click **Add account** and complete the Instagram
+   login/authorization prompt. This generates:
+   - An **access token** (starts with `IGAA...`) — long-lived, ~60 days.
+   - Your **Instagram User ID** — shown on the same screen.
+5. **Add two repo secrets** (Settings → Secrets and variables → Actions →
    New repository secret) on `charada123/kenzoM4-instagram-`:
-   - `IG_ACCESS_TOKEN` — the long-lived token from step 4
-   - `IG_USER_ID` — the ID from step 5
+   - `IG_ACCESS_TOKEN` — the token from step 4 (never paste this into chat
+     with anyone, including Claude — add it directly in GitHub)
+   - `IG_USER_ID` — the ID from step 4
 
-**The long-lived token expires after ~60 days.** Repeat step 4 before it
-expires and update the `IG_ACCESS_TOKEN` secret, or posting will silently
-stop (check the Actions tab for a failed run).
+**The token expires after ~60 days.** Before it expires, go back to the same
+"API setup with Instagram login" page and regenerate it, then update the
+`IG_ACCESS_TOKEN` secret — otherwise posting will silently stop (check the
+Actions tab for a failed run).
 
 ## Adding a post to the queue
 

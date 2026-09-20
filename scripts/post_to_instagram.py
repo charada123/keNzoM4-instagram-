@@ -18,6 +18,7 @@ import requests
 REPO = "charada123/kenzom4-instagram-"
 BRANCH = "main"
 QUEUE_FILE = Path("queue/queue.json")
+GRAPH_HOST = "https://graph.instagram.com"
 GRAPH_VERSION = "v21.0"
 POLL_ATTEMPTS = 20
 POLL_DELAY_SECONDS = 5
@@ -54,7 +55,7 @@ def main() -> None:
 
 def _create_media_container(image_url: str, caption: str, ig_user_id: str, token: str) -> str:
     resp = requests.post(
-        f"https://graph.facebook.com/{GRAPH_VERSION}/{ig_user_id}/media",
+        f"{GRAPH_HOST}/{GRAPH_VERSION}/{ig_user_id}/media",
         data={"image_url": image_url, "caption": caption, "access_token": token},
         timeout=60,
     )
@@ -65,7 +66,7 @@ def _create_media_container(image_url: str, caption: str, ig_user_id: str, token
 def _wait_until_finished(creation_id: str, token: str) -> None:
     for _ in range(POLL_ATTEMPTS):
         resp = requests.get(
-            f"https://graph.facebook.com/{GRAPH_VERSION}/{creation_id}",
+            f"{GRAPH_HOST}/{GRAPH_VERSION}/{creation_id}",
             params={"fields": "status_code", "access_token": token},
             timeout=30,
         )
@@ -83,7 +84,7 @@ def _wait_until_finished(creation_id: str, token: str) -> None:
 
 def _publish(creation_id: str, ig_user_id: str, token: str) -> str:
     resp = requests.post(
-        f"https://graph.facebook.com/{GRAPH_VERSION}/{ig_user_id}/media_publish",
+        f"{GRAPH_HOST}/{GRAPH_VERSION}/{ig_user_id}/media_publish",
         data={"creation_id": creation_id, "access_token": token},
         timeout=60,
     )
