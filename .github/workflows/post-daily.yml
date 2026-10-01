@@ -2,8 +2,10 @@ name: Post to Instagram
 
 on:
   schedule:
-    # 14:00 UTC daily. Edit this to change posting time.
-    - cron: "0 14 * * *"
+    # 02:30 UTC daily = 7:30pm Pacific (PDT, UTC-7). Shifts to 6:30pm once
+    # PST (UTC-8) kicks in Nov; edit the hour then if you want it pinned to
+    # 7:30pm year-round. Chosen for evening engagement on car content.
+    - cron: "30 2 * * *"
   workflow_dispatch: {}
 
 permissions:
