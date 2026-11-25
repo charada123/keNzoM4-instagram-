@@ -1,0 +1,48 @@
+name: Niche engagement digest
+
+on:
+  schedule:
+    # 14:00 UTC daily = 6am Pacific (PST, UTC-8). A morning digest to review
+    # with coffee before posting/engaging for the day.
+    - cron: "0 14 * * *"
+  workflow_dispatch: {}
+
+permissions:
+  contents: write
+
+concurrency:
+  group: niche-digest
+  cancel-in-progress: false
+
+jobs:
+  digest:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+
+      - name: Install dependencies
+        run: pip install requests
+
+      - name: Build digest
+        env:
+          IG_ACCESS_TOKEN: ${{ secrets.IG_ACCESS_TOKEN }}
+          IG_USER_ID: ${{ secrets.IG_USER_ID }}
+        run: python scripts/discover_niche_posts.py
+
+      - name: Commit digest
+        if: always()
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "github-actions[bot]@users.noreply.github.com"
+          git add digests/
+          git diff --cached --quiet && exit 0
+          git commit -m "Add niche engagement digest [skip ci]"
+          git fetch origin main
+          git rebase origin/main
+          git push origin HEAD:main
