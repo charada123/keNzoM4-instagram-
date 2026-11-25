@@ -21,7 +21,7 @@ from pathlib import Path
 
 import requests
 
-GRAPH_HOST = "https://graph.facebook.com"  # hashtag search lives on the FB Graph host, not graph.instagram.com
+GRAPH_HOST = "https://graph.instagram.com"  # test: does hashtag search exist on the instagram-login host?
 GRAPH_VERSION = "v21.0"
 DIGEST_DIR = Path("digests")
 POSTS_PER_HASHTAG = 10
